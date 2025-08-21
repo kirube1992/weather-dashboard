@@ -27,7 +27,7 @@ export const useLocationsStore = defineStore('locations', () => {
     (newLocations) => {
       console.log('Saved location changed, updating localStorage...')
 
-      localStorage.setItem(STORAGE_kEY, JSON.stringify(newLocations))
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(newLocations))
     },
     { deep: true },
   )
