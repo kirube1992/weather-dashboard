@@ -29,5 +29,16 @@ async function getSerachResults() {
   }
 }
 
-watch(searchQuery, query)
+watch(searchQuery, (query) => {
+  clearTimeout(serachTimeout)
+  if (query.trim === '') {
+    searchResults.value = []
+    error.value = null
+    return
+  }
+
+  serachTimeout = setTimeout(() => {
+    getSerachResults()
+  }, 500)
+})
 </script>
