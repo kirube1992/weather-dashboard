@@ -6,17 +6,17 @@ const searchQuery = ref('')
 const error = ref(null)
 const apiKey = 'f764377eac280d889019ea87b28c6bab'
 
-let serachTimeout = null
+let searchTimeout = null
 
 const emit = defineEmits(['select-location'])
 
-async function getSerachResults() {
-  searchResults.value = null
-  searchQuery.value = []
+async function getSearchResult() {
+  error.value = null // Also good to reset the error
+  searchResults.value = []
   try {
     const apiUrl = `https://api.openweathermap.org/geo/1.0/direct?q=${searchQuery.value}&limit=5&appid=${apiKey}`
     const response = await fetch(apiUrl)
-    const data = response.json()
+    const data = await response.json()
 
     if (data.length > 0) {
       searchResults.value = data
@@ -37,20 +37,20 @@ function selectLocation(location) {
 }
 
 watch(searchQuery, (query) => {
-  clearTimeout(serachTimeout)
-  if (query.trim === '') {
+  clearTimeout(searchTimeout)
+  if (query.trim() === '') {
     searchResults.value = []
     error.value = null
     return
   }
 
-  serachTimeout = setTimeout(() => {
-    getSerachResults()
+  searchTimeout = setTimeout(() => {
+    getSearchResult()
   }, 500)
 })
 </script>
 <template>
-  <div>
+  <div class="search-container">
     <input
       type="text"
       placeholder="Search for a city..."
@@ -65,7 +65,7 @@ watch(searchQuery, (query) => {
         v-for="result in searchResults"
         :key="`${result.lat}-${result.lon}`"
         @click="selectLocation(result)"
-        class=""
+        class="result-item"
       >
         {{ result.name }}, {{ result.state ? `${result.state}` : '' }}, {{ result.country }}
       </li>
