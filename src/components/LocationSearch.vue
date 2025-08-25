@@ -31,7 +31,6 @@ async function getSearchResult() {
 
 function selectLocation(location) {
   emit('select-location', location)
-  // Clear the search for a better user experience.
   searchQuery.value = ''
   searchResults.value = []
 }
